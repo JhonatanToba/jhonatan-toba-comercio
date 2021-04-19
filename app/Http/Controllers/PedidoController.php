@@ -66,9 +66,8 @@ class PedidoController extends Controller
         $pedido->pagos_id = $pago->id;
         
         $pedido->save();
-        $pedido = $pedido->id;
 
-        return redirect()->route("su_pedido.index", compact("pedido") );
+        return redirect()->route("su_pedido.index", ["pedido" => $pedido, "id" => $pedido->id] );
     }
 
     /**

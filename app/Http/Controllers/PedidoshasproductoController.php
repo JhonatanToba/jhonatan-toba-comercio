@@ -14,11 +14,12 @@ class PedidoshasproductoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+
         $user= Auth::user();
-        $pedido = session()->get('carrito.productos');
-        return view('components/su_pedido.index', compact('pedido'), ['user' => $user]);
+        
+        return view('components/su_pedido.index', ['user' => $user, "pedido" => session()->get('carrito.productos'), "id" => $request->id]);
     }
 
     /**
@@ -40,15 +41,20 @@ class PedidoshasproductoController extends Controller
     public function store(Request $request)
     {
         $productos = session()->get('carrito.productos');
-        $pedido = $request->pedido_id;
+        
         $ingreso= new pedidoshasproducto;
         foreach($productos as $producto){
             $ingreso->cantidad = $producto["cantidad"];
             $ingreso->productos_id = $producto["producto"]->id;
-            $ingreso->pedidos_id = 10;
+            $ingreso->pedidos_id = $request->pedido_id;
         }
-        session()->flash('status',"Tu pedido ya se ha tomado, muchas gracias por usar nuestra empresa, en los próximos días recibiras tu pedido, que tengas buen día");
-        return redirect()->route("su_pedido.destroy");
+
+        $ingreso->save();
+
+        $this->destroy($request);
+        
+        
+        return redirect()->route("producto.index");
     }
 
     /**
@@ -93,20 +99,19 @@ class PedidoshasproductoController extends Controller
      */
     public function destroy(Request $request)
     {
-        $ProductoEnCarrito = producto::find($request->producto);
-
         $actual = $request->session()->get('carrito.productos');
+        foreach ($actual as $producto) {
 
-        $eliminar = $this->indice($actual, $ProductoEnCarrito);
-
-        if ($eliminar != -1) {
-            
-            if($actual[$eliminar]["productos"]->id = $ProductoEnCarrito->id){
-                unset($actual[$eliminar]);
-                $request->session()->put('carrito.productos', $actual);
+        $ProductoEnCarrito = producto::find($producto["producto"]->id);
+        
+            if($producto["producto"]->id == $ProductoEnCarrito->id){
+                unset($producto["producto"]);
                 session()->flash('status',"Tu pedido ya se ha tomado, muchas gracias por usar nuestra empresa, en los próximos días recibiras tu pedido, que tengas buen día");
-                return redirect()->route('producto.index');
             }
         }
+     
+        $request->session()->put('carrito.productos', $actual);
+        
+            
     }
 }

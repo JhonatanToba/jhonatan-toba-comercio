@@ -1,5 +1,6 @@
 @extends("layouts.default")
 @section("content")
+
 <div class="container">
 <h1>¡Gracias por su compra!</h1>
 <h5>Has adquirido los siguientes productos</h5>
@@ -57,7 +58,7 @@
             <div class="bg-light px-4 py-3">
                 <div class="row align-items-center text-center">
                   <div class="col-md-6 text-md-right">
-                    <input type="hidden" name="pedido_id" value=""  />
+                    <input type="hidden" name="pedido_id" value="{{$id}}"  />
                     <input class="btn btn-outline-dark btn-sm fas fa-long-arrow-alt-right ml-2" type="submit" value="Continuar"/>
                 </div>
                 </div>
