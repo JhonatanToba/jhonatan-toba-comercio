@@ -13,7 +13,7 @@ class producto extends Model
         return $this->hasMany(pedidoshasproducto::class);
     }
 
-    public function imagen(){
-        return $this->hasMany(imagen::class);
+    public function foto(){
+        return $this->hasMany(foto::class, "productos_id");
     }
 }

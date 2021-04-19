@@ -17,7 +17,7 @@ class CreateTrendingProducto extends Migration
             $table->boolean("trending");
         });
     }
-
+ 
     /**
      * Reverse the migrations.
      *

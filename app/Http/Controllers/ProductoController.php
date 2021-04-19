@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductoController extends Controller
 {
@@ -14,7 +15,9 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        return view('auth.login');
+        $user= Auth::user();
+        $productos = producto::all();
+        return view("components/productos.index", compact("productos"), ['user' => $user]);
     }
 
     /**
@@ -46,7 +49,8 @@ class ProductoController extends Controller
      */
     public function show(producto $producto)
     {
-        //
+        $user= Auth::user();
+        return view("components/productos.show", ["producto" => $producto, 'user' => $user]);
     }
 
     /**

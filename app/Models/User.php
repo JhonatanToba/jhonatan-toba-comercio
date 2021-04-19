@@ -11,9 +11,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public function rol(){
-        return $this->belongsTo(rol::class);
-    }
 
     public function pedido(){
         return $this->hasMany(pedido::class);

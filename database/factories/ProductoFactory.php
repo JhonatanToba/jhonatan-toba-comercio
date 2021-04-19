@@ -22,7 +22,13 @@ class ProductoFactory extends Factory
     public function definition()
     {
         return [
-            //
+            "created_at" => date("Y-m-d H:m:s"),
+            "updated_at" => date("Y-m-d H:m:s"),
+            "nombre" => $this->faker->name(),
+            "precio" => $this->faker->randomNumber(),
+            "activo" => $this->faker->numberBetween(0,1),
+            "trending" => $this->faker->numberBetween(0,1),
+            "fecha_lanzamiento" => date("Y-m-d H:m:s")
         ];
     }
 }

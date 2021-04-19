@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\pago;
 use App\Models\pedido;
+use App\Models\producto;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PedidoController extends Controller
 {
@@ -14,7 +18,20 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        //
+        if(Auth::check() == false){
+            return redirect()->route('login');
+        }
+
+        if(session()->get('carrito.productos') == false){
+            session()->flash('status',"No cuentas con productos en este momento, aun tenemos muchos productos para ti");
+            return redirect()->route('producto.index');
+        }
+
+        $user= Auth::user();
+
+        $pedido = session()->get('carrito.productos');
+
+        return view('components/pedido.index', compact('pedido'), ['user' => $user]);
     }
 
     /**
@@ -24,7 +41,7 @@ class PedidoController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -35,7 +52,23 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user= Auth::user();
+        $usuario = User::where("name", $user->name)->first();
+        
+        $productos = session()->get('carrito.productos');
+        
+        $pago = pago::where("id", 1)->first();
+
+        $pedido = New pedido;
+        $pedido->fecha= now();
+        $pedido->precio_total = $request->precio_total;
+        $pedido->users_id = $usuario->id;
+        $pedido->pagos_id = $pago->id;
+        
+        $pedido->save();
+        $pedido = $pedido->id;
+
+        return redirect()->route("su_pedido.index", compact("pedido") );
     }
 
     /**
